@@ -21,6 +21,11 @@ export default {
    * 是否显示 tagsView
    */
   tagsView: true,
+  
+  /**
+   * 显示页签图标
+   */
+  tagsIcon: false,
 
   /**
    * 是否固定头部

@@ -6,6 +6,7 @@
       :action="uploadFileUrl"
       :before-upload="handleBeforeUpload"
       :file-list="fileList"
+      :data="props.data"
       :limit="limit"
       :on-error="handleUploadError"
       :on-exceed="handleExceed"
@@ -19,7 +20,7 @@
       <el-button :link="props.isLink" type="primary">{{ uploadBtnText }}</el-button>
     </el-upload>
     <!-- 上传提示 -->
-    <div class="el-upload__tip" v-if="showTip">
+    <div class="el-upload__tip" v-if="showTip && !disabled">
       请上传
       <template v-if="fileSize">
         大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b>
@@ -30,7 +31,7 @@
       的文件
     </div>
     <!-- 文件列表 -->
-    <transition-group
+    <transition-group ref="uploadFileList"
       v-if="isShowFileList"
       class="upload-file-list el-upload-list el-upload-list--text"
       name="el-fade-in-linear"
@@ -49,7 +50,7 @@
           <span class="el-icon-document"> {{ getFileName(file.name) }} </span>
         </el-link>
         <div class="ele-upload-list__item-content-action">
-          <el-link :underline="false" @click="handleDelete(index)" type="danger"
+          <el-link :underline="false" @click="handleDelete(index)" type="danger" v-if="!disabled"
             >删除</el-link
           >
         </div>
@@ -60,6 +61,7 @@
 
 <script setup>
 import { getToken } from "@/utils/auth";
+import Sortable from 'sortablejs'
 
 const props = defineProps({
   modelValue: [String, Object, Array],
@@ -71,9 +73,14 @@ const props = defineProps({
     type: String,
     default: "选取文件",
   },
-  uploadFileUrl: {
+  // 上传接口地址
+  action: {
     type: String,
-    default: "/common/upload",
+    default: "/common/upload"
+  },
+  // 上传携带的参数
+  data: {
+    type: Object
   },
   // 数量限制
   limit: {
@@ -95,6 +102,11 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  // 禁用组件（仅查看文件）
+  disabled: {
+    type: Boolean,
+    default: false
+  },
   isShowFileList: {
     type: Boolean,
     default: true,
@@ -111,6 +123,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // 拖动排序
+  drag: {
+    type: Boolean,
+    default: true
+  }
 });
 
 const { proxy } = getCurrentInstance();
@@ -119,7 +136,7 @@ const number = ref(0);
 const uploadList = ref([]);
 const baseUrl = import.meta.env.VITE_APP_BASE_API;
 const uploadFileUrl = ref(
-  import.meta.env.VITE_APP_BASE_API + props.uploadFileUrl
+  import.meta.env.VITE_APP_BASE_API + props.action
 ); // 上传文件服务器地址
 const headers = ref({ Authorization: "Bearer " + getToken() });
 const fileList = ref([]);
@@ -128,7 +145,7 @@ const showTip = computed(
 );
 
 watch(
-  () => props.uploadFileUrl,
+  () => props.action,
   (val) => {
     if (val) {
       uploadFileUrl.value =
@@ -205,6 +222,7 @@ function handleExceed() {
 // 上传失败
 function handleUploadError(err) {
   proxy.$modal.msgError("上传文件失败");
+  proxy.$modal.closeLoading();
 }
 
 // 上传成功回调
@@ -279,9 +297,31 @@ function listToString(list, separator) {
   }
   return strs != "" ? strs.substr(0, strs.length - 1) : "";
 }
+
+// 初始化拖拽排序
+onMounted(() => {
+  if (props.drag && !props.disabled) {
+    nextTick(() => {
+      const element = proxy.$refs.uploadFileList?.$el || proxy.$refs.uploadFileList
+      Sortable.create(element, {
+        ghostClass: 'file-upload-darg',
+        onEnd: (evt) => {
+          const movedItem = fileList.value.splice(evt.oldIndex, 1)[0]
+          fileList.value.splice(evt.newIndex, 0, movedItem)
+          emit('update:modelValue', listToString(fileList.value))
+        }
+      })
+    })
+  }
+})
 </script>
 
 <style scoped lang="scss">
+.file-upload-darg {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+
 .upload-file-uploader {
   margin-bottom: 5px;
 }
@@ -290,6 +330,7 @@ function listToString(list, separator) {
   line-height: 2;
   margin-bottom: 10px;
   position: relative;
+  transition: none !important;
 }
 .upload-file-list .ele-upload-list__item-content {
   display: flex;

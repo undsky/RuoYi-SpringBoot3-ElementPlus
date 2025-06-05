@@ -9,6 +9,7 @@
       list-type="picture-card"
       :on-success="handleUploadSuccess"
       :before-upload="handleBeforeUpload"
+      :data="props.data"
       :limit="limit"
       :on-error="handleUploadError"
       :on-exceed="handleExceed"
@@ -86,14 +87,18 @@
           ) > -1
         "
         :src="dialogImageUrl"
-        :style="{ height: 'calc(' + (proxy.isPhone ? '100vh' : '70vh') + ' - 110px)' }"
+        :style="{
+          height: 'calc(' + (proxy.isPhone ? '100vh' : '70vh') + ' - 110px)',
+        }"
         style="display: block; width: 100%; margin: 0 auto"
       />
       <video
         v-else
         autoplay
         controls
-        :style="{ height: 'calc(' + (proxy.isPhone ? '100vh' : '70vh') + ' - 110px)' }"
+        :style="{
+          height: 'calc(' + (proxy.isPhone ? '100vh' : '70vh') + ' - 110px)',
+        }"
         style="display: block; width: 100%; margin: 0 auto"
       >
         <source :src="dialogImageUrl" />
@@ -103,9 +108,9 @@
       hide-on-click-modal
       teleported
       @close="
-          () => {
-              showViewer = false;
-          }
+        () => {
+          showViewer = false;
+        }
       "
       v-if="showViewer"
       :url-list="previewList"
@@ -121,21 +126,31 @@ import { getToken } from "@/utils/auth";
 import { isExternal } from "@/utils/validate";
 
 onMounted(() => {
-  const el = proxy.$refs.imageUpload.$el.querySelectorAll(".el-upload-list")[0];
-  Sortable.create(el, {
-    onEnd: ({ oldIndex, newIndex }) => {
-      const arr = clone(fileList.value);
-      const page = arr[oldIndex];
-      arr.splice(oldIndex, 1);
-      arr.splice(newIndex, 0, page);
-      fileList.value = arr;
-      emit("update:modelValue", listToString(fileList.value));
-    },
-  });
+  if (props.drag && !props.disabled) {
+    nextTick(() => {
+      const element = proxy.$refs.imageUpload?.$el?.querySelector('.el-upload-list')
+      Sortable.create(element, {
+        onEnd: (evt) => {
+          const movedItem = fileList.value.splice(evt.oldIndex, 1)[0]
+          fileList.value.splice(evt.newIndex, 0, movedItem)
+          emit('update:modelValue', listToString(fileList.value))
+        }
+      })
+    })
+  }
 });
 
 const props = defineProps({
   modelValue: [String, Object, Array],
+  // 上传接口地址
+  action: {
+    type: String,
+    default: "/common/upload",
+  },
+  // 上传携带的参数
+  data: {
+    type: Object,
+  },
   disabled: {
     type: Boolean,
     default: false,
@@ -165,6 +180,11 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  // 拖动排序
+  drag: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const { proxy } = getCurrentInstance();
@@ -174,7 +194,7 @@ const uploadList = ref([]);
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
 const baseUrl = import.meta.env.VITE_APP_BASE_API;
-const uploadImgUrl = ref(import.meta.env.VITE_APP_BASE_API + "/common/upload"); // 上传的图片服务器地址
+const uploadImgUrl = ref(import.meta.env.VITE_APP_BASE_API + props.action); // 上传的图片服务器地址
 const headers = ref({ Authorization: "Bearer " + getToken() });
 const fileList = ref([]);
 const showTip = computed(
@@ -183,6 +203,16 @@ const showTip = computed(
 const showViewer = ref(false);
 const previewList = ref([]);
 const previewIndex = ref(0);
+
+watch(
+  () => props.action,
+  (val) => {
+    if (val) {
+      uploadImgUrl.value = import.meta.env.VITE_APP_BASE_API + val;
+    }
+  },
+  { deep: true, immediate: true }
+);
 
 watch(
   () => props.modelValue,
@@ -201,7 +231,7 @@ watch(
         }
         return item;
       });
-      if ('image/*' == props.accept)
+      if ("image/*" == props.accept)
         previewList.value = fileList.value.map((item) => item.url);
     } else {
       fileList.value = [];
@@ -234,8 +264,8 @@ function handleBeforeUpload(file) {
     );
     return false;
   }
-  if (file.name.includes(',')) {
-    proxy.$modal.msgError('文件名不正确，不能包含英文逗号!');
+  if (file.name.includes(",")) {
+    proxy.$modal.msgError("文件名不正确，不能包含英文逗号!");
     return false;
   }
   if (props.fileSize) {
@@ -301,20 +331,22 @@ function handleUploadError() {
 }
 
 function setCurr(id) {
-    for (let i = 0; i < fileList.value.length; i++) {
-        const file = fileList.value[i];
-        document.getElementById(file.name).setAttribute('curr', file.name == id ? 'curr' : '');
-    }
+  for (let i = 0; i < fileList.value.length; i++) {
+    const file = fileList.value[i];
+    document
+      .getElementById(file.name)
+      .setAttribute("curr", file.name == id ? "curr" : "");
+  }
 }
 
 function getCurr(id) {
-    return document.getElementById(id).getAttribute('curr') == 'curr';
+  return document.getElementById(id).getAttribute("curr") == "curr";
 }
 
 // 预览
 function handlePictureCardPreview(file) {
   setCurr(file.name);
-  if ('image/*' == props.accept) {
+  if ("image/*" == props.accept) {
     showViewer.value = true;
     previewIndex.value = previewList.value.indexOf(file.url);
   } else {
@@ -341,4 +373,8 @@ function listToString(list, separator) {
 :deep(.hide .el-upload--picture-card) {
   display: none;
 }
+
+:deep(.el-upload.el-upload--picture-card.is-disabled) {
+  display: none !important;
+} 
 </style>
