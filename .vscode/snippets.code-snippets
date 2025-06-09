@@ -15,6 +15,24 @@
   // 	],
   // 	"description": "Log output to console"
   // }
+  "dept-html": {
+    "scope": "html",
+    "prefix": "dept-html",
+    "body": ["<el-tree-select v-model=\"$0\" :data=\"enabledDeptOptions\" :props=\"{ value: 'deptId', label: 'deptName', children: 'children' }\" value-key=\"deptId\" placeholder=\"请选择部门\" check-strictly />"]
+  },
+  "dept-js": {
+    "scope": "javascript,typescript",
+    "prefix": "dept-js",
+    "body": [
+      "import { listDept } from \"@/api/system/dept\";",
+      "const enabledDeptOptions = ref(undefined);",
+      "listDept({",
+      "status: 0,",
+      "}).then((response) => {",
+      "enabledDeptOptions.value = proxy.handleTree(response.data, \"deptId\");",
+      "});"
+    ]
+  },
   "modal-loading": {
     "scope": "javascript,typescript",
     "prefix": "modal-loading",
