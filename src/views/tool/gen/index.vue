@@ -46,7 +46,7 @@
           v-hasPermi="['tool:gen:code']"
         >生成</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -54,7 +54,7 @@
           @click="openCreateTable"
           v-hasRole="['admin']"
         >创建</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="info"
