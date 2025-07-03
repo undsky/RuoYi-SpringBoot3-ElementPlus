@@ -1,0 +1,5 @@
+---
+description: 通用规则，适用于整个项目
+globs:
+alwaysApply: true
+---
