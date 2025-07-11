@@ -12,17 +12,26 @@ alwaysApply: true
 
 # 技术栈
 
-- [Vue3](https://cn.vuejs.org/guide/introduction)
-- [Element Plus](https://cn.element-plus.org/zh-CN/component/overview.html)
-- [Vant](https://vant-ui.github.io/vant/#/zh-CN)
-- [Axios](https://axios-http.com/zh/docs/intro)
-- [ECharts](https://echarts.apache.org/handbook/zh/get-started/)
-- [Pinia](https://pinia.vuejs.org/zh/introduction.html)
-- [Vue Router](https://router.vuejs.org/zh/installation.html)
-- [xe-utils](https://vxeui.com/xe-utils/#/)
-- [Day.js](https://day.js.org/docs/zh-CN/installation/installation)
-- [VueUse](https://vueuse.org/guide/)
-- [Vite](https://cn.vite.dev/guide/)
+- 框架：
+  - [Vue3](https://cn.vuejs.org/guide/introduction)
+  - [Element Plus](https://cn.element-plus.org/zh-CN/component/overview.html)
+  - [Vant](https://vant-ui.github.io/vant/#/zh-CN)
+  - [Axios](https://axios-http.com/zh/docs/intro)
+  - [ECharts](https://echarts.apache.org/handbook/zh/get-started/)
+  - [Pinia](https://pinia.vuejs.org/zh/introduction.html)
+  - [Vue Router](https://router.vuejs.org/zh/installation.html)
+  - [xe-utils](https://vxeui.com/xe-utils/#/)
+  - [Day.js](https://day.js.org/docs/zh-CN/installation/installation)
+  - [VueUse](https://vueuse.org/guide/)
+  - [Vite](https://cn.vite.dev/guide/)
+- 语言：
+  - Vue3、JavaScript
+- 样式：
+  - SCSS/CSS
+- 状态管理：
+  - Pinia
+- 构建工具：
+  - Vite
 
 # 目标
 
