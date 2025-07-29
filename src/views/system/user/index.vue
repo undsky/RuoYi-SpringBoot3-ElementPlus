@@ -246,7 +246,7 @@ const dateRange = ref([]);
 const deptName = ref("");
 const deptOptions = ref(undefined);
 const enabledDeptOptions = ref(undefined);
-const initPassword = ref("abc123");
+const initPassword = ref("Abc_123");
 const postOptions = ref([]);
 const roleOptions = ref([]);
 /*** 用户导入参数 */
