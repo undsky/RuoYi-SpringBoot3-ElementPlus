@@ -1,26 +1,54 @@
 <template>
-  <router-view />
+    <router-view />
 </template>
 
 <script setup>
-import useSettingsStore from '@/store/modules/settings'
-import { handleThemeStyle } from '@/utils/theme'
+import useSettingsStore from '@/store/modules/settings';
+import { handleThemeStyle } from '@/utils/theme';
+import useUserStore from '@/store/modules/user';
+const userStore = useUserStore();
+
+const logoutLimit = 1000 * 60 * 15; // 15分钟
+
+function logout() {
+    userStore.logOut().then(() => {
+        location.href = '/admin/index';
+    });
+}
 
 onMounted(() => {
-  nextTick(() => {
-    // 初始化主题样式
-    handleThemeStyle(useSettingsStore().theme)
-  })
-})
+    // 用户一段时间内无操作，自动登出
+    let logoutTimer = setTimeout(logout, logoutLimit);
+
+    let userOpDelay = () => {
+        clearTimeout(logoutTimer);
+        logoutTimer = setTimeout(logout, logoutLimit);
+    };
+
+    document.getElementById('app').addEventListener('keydown', userOpDelay);
+    document.getElementById('app').addEventListener('mousemove', userOpDelay);
+    document.getElementById('app').addEventListener('mousedown', userOpDelay);
+    document.getElementById('app').addEventListener('click', userOpDelay);
+    document.getElementById('app').addEventListener('scroll', userOpDelay);
+
+    nextTick(() => {
+        // 初始化主题样式
+        handleThemeStyle(useSettingsStore().theme);
+    });
+});
 </script>
 <style lang="scss">
 // https://github.com/element-plus/element-plus/issues/15834#issuecomment-1936919229
 .el-form--inline {
-  .el-form-item {
-    & > .el-input, .el-cascader, .el-select, .el-date-editor, .el-autocomplete {
-      width: 192px;
+    .el-form-item {
+        & > .el-input,
+        .el-cascader,
+        .el-select,
+        .el-date-editor,
+        .el-autocomplete {
+            width: 192px;
+        }
     }
-  }
 }
 
 .el-dialog .el-dialog__body {
