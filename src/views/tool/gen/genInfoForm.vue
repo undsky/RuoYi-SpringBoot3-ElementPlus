@@ -18,6 +18,8 @@
           <el-select v-model="info.tplWebType">
             <el-option label="Vue2 Element UI 模版" value="element-ui" />
             <el-option label="Vue3 Element Plus 模版" value="element-plus" />
+            <el-option label="ruoyi-vue3-lmw 模版" value="lmw" />
+            <el-option label="bear-jia-vue3 模版" value="bearjia" />
           </el-select>
         </el-form-item>
       </el-col>
