@@ -29,7 +29,7 @@
             loading="lazy"
             v-if="
               ['png', 'jpg', 'jpeg'].indexOf(
-                dialogImageUrl.slice(dialogImageUrl.lastIndexOf('.') + 1)
+                file.url.slice(file.url.lastIndexOf('.') + 1)
               ) > -1
             "
             class="el-upload-list__item-thumbnail"
@@ -90,7 +90,7 @@
         :style="{
           height: 'calc(' + (proxy.isPhone ? '100vh' : '70vh') + ' - 110px)',
         }"
-        style="display: block; width: 100%; margin: 0 auto"
+        style="display: block; max-width: 100%; margin: 0 auto"
       />
       <video
         v-else
@@ -99,7 +99,7 @@
         :style="{
           height: 'calc(' + (proxy.isPhone ? '100vh' : '70vh') + ' - 110px)',
         }"
-        style="display: block; width: 100%; margin: 0 auto"
+        style="display: block; max-width: 100%; margin: 0 auto"
       >
         <source :src="dialogImageUrl" />
       </video>
