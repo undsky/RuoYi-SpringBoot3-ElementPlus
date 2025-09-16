@@ -46,6 +46,8 @@ import ImagePreview from "@/components/ImagePreview"
 import DictTag from '@/components/DictTag'
 // 数字组件（千分位显示）
 import InputNumberQianfen from '@/components/InputNumberQianfen';
+// 省市区级联选择器组件
+import RegionCascader from '@/components/RegionCascader';
 
 const app = createApp(App)
 
@@ -75,6 +77,7 @@ app.component('ImageUpload', ImageUpload)
 app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('Editor', Editor)
+app.component('RegionCascader', RegionCascader)
 
 import UEditorPlus from "@/components/UEditorPlus";
 app.component("UEditorPlus", UEditorPlus);
