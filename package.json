@@ -27,6 +27,7 @@
     "jsencrypt": "3.3.2",
     "mitt": "^3.0.1",
     "nprogress": "0.2.0",
+    "pdf-vue3": "^1.0.12",
     "pinia": "3.0.2",
     "sortablejs": "^1.15.2",
     "splitpanes": "4.0.4",
