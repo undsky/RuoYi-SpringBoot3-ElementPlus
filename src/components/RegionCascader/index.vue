@@ -16,7 +16,7 @@
 
 <script setup name="RegionCascader">
 import { ref, watch, onMounted } from 'vue'
-import { listRegion } from '@/api/biz/Region'
+import { listRegion,getRegion } from '@/api/biz/Region'
 
 // 定义组件属性
 const props = defineProps({
@@ -125,10 +125,10 @@ function loadRegionOptions(node, resolve) {
     queryParams = { level: 1 }
   } else if (level === 1 && props.level >= 2) {
     // 加载城市数据
-    queryParams = { level: 2, parent_id: data.id }
+    queryParams = { level: 2, parentId: data.id }
   } else if (level === 2 && props.level >= 3) {
     // 加载区县数据
-    queryParams = { level: 3, parent_id: data.id }
+    queryParams = { level: 3, parentId: data.id }
   }
   
   listRegion(queryParams).then(response => {
@@ -174,25 +174,25 @@ async function getSelectedLabels(values) {
   try {
     // 获取省份名称
     if (values[0] && props.level >= 1) {
-      const provinceResponse = await listRegion({ level: 1, id: values[0] })
-      if (provinceResponse.data && provinceResponse.data.length > 0) {
-        labels.push(provinceResponse.data[0].name)
+      const provinceResponse = await getRegion( values[0] )
+      if (provinceResponse.data) {
+        labels.push(provinceResponse.data.name)
       }
     }
 
     // 获取城市名称
     if (values[1] && props.level >= 2) {
-      const cityResponse = await listRegion({ level: 2, id: values[1] })
-      if (cityResponse.data && cityResponse.data.length > 0) {
-        labels.push(cityResponse.data[0].name)
+      const cityResponse = await getRegion( values[1] )
+      if (cityResponse.data) {
+        labels.push(cityResponse.data.name)
       }
     }
 
     // 获取区县名称
     if (values[2] && props.level >= 3) {
-      const districtResponse = await listRegion({ level: 3, id: values[2] })
-      if (districtResponse.data && districtResponse.data.length > 0) {
-        labels.push(districtResponse.data[0].name)
+      const districtResponse = await getRegion( values[2] )
+      if (districtResponse.data ) {
+        labels.push(districtResponse.data.name)
       }
     }
 
