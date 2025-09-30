@@ -2,7 +2,7 @@ import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
 import createVitePlugins from './vite/plugins'
 
-const baseUrl = 'http://localhost:8087' // 后端接口
+const baseUrl = 'http://localhost:8087' // 后端接口 https://vue.ruoyi.vip/prod-api
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode, command }) => {

@@ -8,8 +8,6 @@ import { handleThemeStyle } from '@/utils/theme';
 import useUserStore from '@/store/modules/user';
 const userStore = useUserStore();
 
-const logoutLimit = 1000 * 60 * 15; // 15分钟
-
 function logout() {
     userStore.logOut().then(() => {
         location.href = '/admin/index';
@@ -17,19 +15,22 @@ function logout() {
 }
 
 onMounted(() => {
-    // 用户一段时间内无操作，自动登出
-    let logoutTimer = setTimeout(logout, logoutLimit);
+    const logoutLimit = import.meta.env.VITE_LOGOUT_LIMIT;
+    if (logoutLimit && logoutLimit > 0) {
+        // 用户一段时间内无操作，自动登出
+        let logoutTimer = setTimeout(logout, logoutLimit);
 
-    let userOpDelay = () => {
-        clearTimeout(logoutTimer);
-        logoutTimer = setTimeout(logout, logoutLimit);
-    };
+        let userOpDelay = () => {
+            clearTimeout(logoutTimer);
+            logoutTimer = setTimeout(logout, logoutLimit);
+        };
 
-    document.getElementById('app').addEventListener('keydown', userOpDelay);
-    document.getElementById('app').addEventListener('mousemove', userOpDelay);
-    document.getElementById('app').addEventListener('mousedown', userOpDelay);
-    document.getElementById('app').addEventListener('click', userOpDelay);
-    document.getElementById('app').addEventListener('scroll', userOpDelay);
+        document.getElementById('app').addEventListener('keydown', userOpDelay);
+        document.getElementById('app').addEventListener('mousemove', userOpDelay);
+        document.getElementById('app').addEventListener('mousedown', userOpDelay);
+        document.getElementById('app').addEventListener('click', userOpDelay);
+        document.getElementById('app').addEventListener('scroll', userOpDelay);
+    }
 
     nextTick(() => {
         // 初始化主题样式
