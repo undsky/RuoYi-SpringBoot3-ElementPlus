@@ -133,7 +133,7 @@ onMounted(() => {
         onEnd: (evt) => {
           const movedItem = fileList.value.splice(evt.oldIndex, 1)[0]
           fileList.value.splice(evt.newIndex, 0, movedItem)
-          emit('update:modelValue', listToString(fileList.value))
+          emit('update:modelValue', listToJsonString(fileList.value))
         }
       })
     })
@@ -219,7 +219,7 @@ watch(
   (val) => {
     if (val) {
       // 首先将值转为数组
-      const list = Array.isArray(val) ? val : props.modelValue.split(",");
+      const list = Array.isArray(val) ? val : JSON.parse(val);
       // 然后将数组转为对象数组
       fileList.value = list.map((item) => {
         if (typeof item === "string") {
@@ -306,7 +306,7 @@ function handleDelete(file) {
   const findex = fileList.value.map((f) => f.name).indexOf(file.name);
   if (findex > -1 && uploadList.value.length === number.value) {
     fileList.value.splice(findex, 1);
-    emit("update:modelValue", listToString(fileList.value));
+    emit("update:modelValue", listToJsonString(fileList.value));
     return false;
   }
 }
@@ -319,7 +319,7 @@ function uploadedSuccessfully() {
       .concat(uploadList.value);
     uploadList.value = [];
     number.value = 0;
-    emit("update:modelValue", listToString(fileList.value));
+    emit("update:modelValue", listToJsonString(fileList.value));
     proxy.$modal.closeLoading();
   }
 }
@@ -365,6 +365,15 @@ function listToString(list, separator) {
     }
   }
   return strs != "" ? strs.substr(0, strs.length - 1) : "";
+}
+function listToJsonString(list){
+  let arr = [];
+  for (let i in list) {
+    if (undefined !== list[i].url && list[i].url.indexOf("blob:") !== 0) {
+      arr.push(list[i].url.replace(baseUrl, ""));
+    }
+  }
+  return JSON.stringify(arr);
 }
 </script>
 

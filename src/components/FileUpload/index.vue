@@ -165,7 +165,7 @@ watch(
     if (val && !props.isImport) {
       let temp = 1;
       // 首先将值转为数组
-      const list = Array.isArray(val) ? val : props.modelValue.split(",");
+      const list = Array.isArray(val) ? val : JSON.parse(val);
       // 然后将数组转为对象数组
       fileList.value = list.map((item) => {
         if (typeof item === "string") {
@@ -260,7 +260,7 @@ function handleUploadSuccess(res, file) {
 // 删除文件
 function handleDelete(index) {
   fileList.value.splice(index, 1);
-  emit("update:modelValue", listToString(fileList.value));
+  emit("update:modelValue", listToJsonString(fileList.value));
 }
 
 // 上传结束处理
@@ -271,7 +271,7 @@ function uploadedSuccessfully() {
       .concat(uploadList.value);
     uploadList.value = [];
     number.value = 0;
-    emit("update:modelValue", listToString(fileList.value));
+    emit("update:modelValue", listToJsonString(fileList.value));
     proxy.$modal.closeLoading();
   }
 }
@@ -297,6 +297,15 @@ function listToString(list, separator) {
   }
   return strs != "" ? strs.substr(0, strs.length - 1) : "";
 }
+function listToJsonString(list){
+  let arr = [];
+  for (let i in list) {
+    if (undefined !== list[i].url && list[i].url.indexOf("blob:") !== 0) {
+      arr.push(list[i].url.replace(baseUrl, ""));
+    }
+  }
+  return JSON.stringify(arr);
+}
 
 // 初始化拖拽排序
 onMounted(() => {
@@ -308,7 +317,7 @@ onMounted(() => {
         onEnd: (evt) => {
           const movedItem = fileList.value.splice(evt.oldIndex, 1)[0]
           fileList.value.splice(evt.newIndex, 0, movedItem)
-          emit('update:modelValue', listToString(fileList.value))
+          emit('update:modelValue', listToJsonString(fileList.value))
         }
       })
     })
