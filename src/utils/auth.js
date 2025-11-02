@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 
-const TokenKey = 'psyduck-Token'
+const TokenKey = 'RuoyiSpringBoot3-Token'
 
 export function getToken() {
   return Cookies.get(TokenKey)
