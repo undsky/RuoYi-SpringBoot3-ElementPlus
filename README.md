@@ -12,6 +12,15 @@
 
 本项目是在 [RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3) 基础上进行的深度优化和功能扩展版本，保留了原有的所有功能，并新增了大量实用的组件和工具，致力于提供更好的开发体验和更强大的功能支持。
 
+## 联系方式
+
+- 🌐 **官方网站**：https://www.undsky.com
+
+## 相关项目
+
+### 后端项目
+- 💻 https://github.com/undsky/RuoYi-SpringBoot3-Pro
+
 ### 技术栈
 
 - **前端框架**: Vue 3.5.16 + Vite 6.3.5
