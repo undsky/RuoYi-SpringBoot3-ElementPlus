@@ -10,7 +10,7 @@
 
 ## 📝 项目简介
 
-本项目是在 [RuoYi-Vue3](https://gitee.com/y_project/RuoYi-Vue3) 基础上进行的深度优化和功能扩展版本，保留了原有的所有功能，并新增了大量实用的组件和工具，致力于提供更好的开发体验和更强大的功能支持。
+本项目是在 [RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3) 基础上进行的深度优化和功能扩展版本，保留了原有的所有功能，并新增了大量实用的组件和工具，致力于提供更好的开发体验和更强大的功能支持。
 
 ### 技术栈
 
@@ -871,7 +871,7 @@ build: 更新 xxx 构建配置
 
 ## 🙏 致谢
 
-- 感谢 [RuoYi-Vue3](https://gitee.com/y_project/RuoYi-Vue3) 提供的优秀基础框架
+- 感谢 [RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3) 提供的优秀基础框架
 - 感谢所有开源组件的作者和贡献者
 
 ---
