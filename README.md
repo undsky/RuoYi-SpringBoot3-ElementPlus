@@ -3,10 +3,6 @@
 </p>
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi-SpringBoot3-ElementPlus</h1>
 <h4 align="center">基于 RuoYi-Vue3 的增强优化版本</h4>
-<p align="center">
-	<a href="https://gitee.com/y_project/RuoYi-Vue"><img src="https://img.shields.io/badge/RuoYi-v3.9.0-brightgreen.svg"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-</p>
 
 ## 📝 项目简介
 
