@@ -9,10 +9,10 @@ import { readdir, stat } from 'node:fs/promises';
 
 // 基本配置（可通过环境变量覆盖）
 const config = {
-  host: process.env.SFTP_HOST || '192.168.22.136',
+  host: process.env.SFTP_HOST || '',
   port: Number(process.env.SFTP_PORT || 22),
-  username: process.env.SFTP_USER || 'root',
-  password: process.env.SFTP_PASSWORD || 'root0202',
+  username: process.env.SFTP_USER || '',
+  password: process.env.SFTP_PASSWORD || '',
   localDir: process.env.SFTP_LOCAL || path.resolve(process.cwd(), 'dist'),
   remoteDir: process.env.SFTP_REMOTE || '/dist',
 };
