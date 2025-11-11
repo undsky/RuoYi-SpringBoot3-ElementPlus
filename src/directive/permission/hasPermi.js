@@ -15,7 +15,16 @@ export default {
       const permissionFlag = value
 
       const hasPermissions = permissions.some(permission => {
-        return all_permission === permission || permissionFlag.includes(permission)
+        let has = all_permission === permission || permissionFlag.includes(permission);
+        if (!has) {
+            for (const permi of permissionFlag) {
+                if (permi.startsWith(permission.trim())) {
+                    has = true;
+                    break;
+                }
+            }
+        }
+        return has;
       })
 
       if (!hasPermissions) {
