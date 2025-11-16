@@ -1,0 +1,19 @@
+---
+trigger: model_decision
+description: Vue3 项目文件夹结构
+globs: src/**/*
+---
+- Recommended folder structure:
+  - src/
+    - api/
+    - assets/
+    - components/
+    - directive/
+    - layout/
+    - plugins/
+    - router/
+    - store/
+    - utils/
+    - views/
+    - App.vue
+    - main.js
