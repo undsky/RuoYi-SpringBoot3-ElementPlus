@@ -257,10 +257,10 @@ const form = ref({
 
 **配置文件**: `prettier.config.cjs`
 
-#### 📐 Cursor Rules - AI 编程规范
-集成 Cursor 编辑器的 AI 编程规范，提供智能化的代码建议和最佳实践指导。
+#### 📐 Cursor/Windsurf AI 编程规范
+集成 **Cursor** 和 **Windsurf** 两大 AI 编辑器的编程规范，提供智能化的代码建议和最佳实践指导。
 
-**规范文件位置**: `.cursor/rules/`
+**规范文件位置**: `.cursor/rules/` 和 `.windsurf/rules/`
 
 **包含规范**：
 - ✅ **clean-code.mdc** - 简洁代码指南
@@ -307,7 +307,7 @@ const form = ref({
 - 🚀 **效率提升**：标准化的开发流程，提高团队协作效率
 
 **使用效果**：
-当你在 Cursor 编辑器中编写代码时，AI 助手会：
+当你在 **Cursor** 或 **Windsurf** 编辑器中编写代码时，AI 助手会：
 - 自动建议符合规范的代码写法
 - 提醒潜在的代码质量问题
 - 推荐 Vue 3 组合式 API 的最佳实践
@@ -589,7 +589,7 @@ VITE_LOGOUT_LIMIT=1800000
 | 工具函数库 | ❌ | ✅ xe-utils | 新增，300+ 函数 |
 | 代码检查器 | ❌ | ✅ code-inspector | 新增，开发效率提升 |
 | 代码格式化 | ❌ | ✅ Prettier | 新增，统一代码风格 |
-| AI 编程规范 | ❌ | ✅ Cursor Rules | 新增，智能代码建议 |
+| AI 编程规范 | ❌ | ✅ Cursor/Windsurf Rules | 新增，智能代码建议 |
 | 自动部署 | ❌ | ✅ FTP/SFTP | 新增，一键部署 |
 | 三级等保安全 | ❌ | ✅ 无操作自动登出 | 新增，符合等保要求 |
 | 登录页面 | 1 种 | 2 种 | 新增第二种样式 |
@@ -651,8 +651,8 @@ npm run preview
 
 ```
 RuoYi-SpringBoot3-ElementPlus/
-├── .cursor/                      # 🆕 Cursor 编辑器配置
-│   ├── rules/                   # 🆕 AI 编程规范
+├── .cursor/                      # 🆕 Cursor/Windsurf 编辑器配置
+│   ├── rules/                   # 🆕 AI 编程规范 (Cursor)
 │   │   ├── clean-code.mdc      # 简洁代码指南
 │   │   ├── codequality.mdc     # 代码质量指南
 │   │   ├── common.mdc          # 通用开发规范
@@ -661,6 +661,8 @@ RuoYi-SpringBoot3-ElementPlus/
 │   │   ├── vue-3-composition-api---general.mdc  # Vue3 组合式 API 指南
 │   │   └── vue-3-project-structure.mdc  # Vue3 项目结构
 │   └── mcp.json                # Cursor MCP 配置
+├── .windsurf/                    # 🆕 Windsurf 编辑器配置
+│   └── rules/                   # 🆕 AI 编程规范 (Windsurf)
 ├── ftp/                          # 🆕 FTP/SFTP 部署配置
 │   ├── ftp.js                   # FTP 部署脚本
 │   └── sftp.js                  # SFTP 部署脚本
@@ -911,7 +913,7 @@ build: 更新 xxx 构建配置
 - ✨ 集成 Vant 移动端 UI 组件库
 - ✨ 集成 xe-utils 工具函数库
 - ✨ 新增代码检查器 (code-inspector-plugin)
-- ✨ 新增 Cursor Rules AI 编程规范（7 个规范文件）
+- ✨ 新增 Cursor/Windsurf AI 编程规范（7 个规范文件，支持双 IDE）
 - ✨ 新增 FTP/SFTP 自动部署功能
 - ✨ 新增三级等保安全特性：用户无操作自动登出
 
