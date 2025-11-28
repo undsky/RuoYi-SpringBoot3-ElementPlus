@@ -4,21 +4,31 @@
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi-SpringBoot3-ElementPlus</h1>
 <h4 align="center">基于 RuoYi-Vue3 的增强优化版本</h4>
 
+
 ## 📝 项目简介
 
 本项目是在 [RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3) 基础上进行的深度优化和功能扩展版本，保留了原有的所有功能，并新增了大量实用的组件和工具，致力于提供更好的开发体验和更强大的功能支持。
 
-## 联系方式
 
-- 🌐 **官方网站**：https://www.undsky.com
+## 📑 目录
 
-## 相关项目
+- [项目简介](#项目简介)
+- [后端项目](#后端项目)
+- [核心新特性](#核心新特性)
+- [功能对比](#功能对比)
+- [快速开始](#快速开始)
+- [项目结构](#项目结构)
+- [配置说明](#配置说明)
+- [内置功能](#内置功能)
+- [贡献指南](#贡献指南)
+- [许可证](#许可证)
+- [致谢](#致谢)
+- [联系方式](#联系方式)
 
-### 后端项目
+## 后端项目
 - 💻 https://github.com/undsky/RuoYi-SpringBoot3-Pro
 
 ### 技术栈
-
 - **前端框架**: Vue 3.5.16 + Vite 6.3.5
 - **UI 组件库**: Element Plus 2.9.11 + Vant 4.9.17
 - **状态管理**: Pinia 3.0.2
@@ -257,83 +267,6 @@ const form = ref({
 
 **配置文件**: `prettier.config.cjs`
 
-#### 📐 Cursor/Windsurf AI 编程规范
-集成 **Cursor** 和 **Windsurf** 两大 AI 编辑器的编程规范，提供智能化的代码建议和最佳实践指导。
-
-**规范文件位置**: `.cursor/rules/` 和 `.windsurf/rules/`
-
-**包含规范**：
-- ✅ **clean-code.mdc** - 简洁代码指南
-  - 常量优于魔法数字
-  - 有意义的命名
-  - 智能注释策略
-  - 单一职责原则
-  - DRY 原则（不要重复自己）
-  - 代码质量维护
-
-- ✅ **codequality.mdc** - 代码质量指南
-  - 信息验证机制
-  - 文件级别变更策略
-  - 代码保护原则
-  - 编辑规范
-
-- ✅ **vue.mdc** - Vue 最佳实践
-  - 组合式 API 优先
-  - 组件结构规范
-  - 状态管理指导
-  - 性能优化建议
-  - 路由和表单最佳实践
-
-- ✅ **vue-3-composition-api---general.mdc** - Vue3 组合式 API 通用指南
-  - setup 函数使用规范
-  - ref 和 reactive 使用指导
-  - 生命周期钩子使用
-  - 依赖注入模式
-
-- ✅ **vue-3-project-structure.mdc** - Vue3 项目文件夹结构
-  - 标准化目录结构
-  - 文件组织规范
-
-- ✅ **common.mdc** - 通用开发规范
-  - 项目通用开发约定
-
-- ✅ **project.mdc** - 项目特定规范
-  - 项目级别的定制规范
-
-**核心价值**：
-- 🎯 **智能辅助**：AI 编码助手会自动遵循这些规范，提供更准确的代码建议
-- 📚 **知识沉淀**：将团队最佳实践固化为规则，新成员快速上手
-- 🔒 **质量保障**：确保代码质量一致性，减少代码审查负担
-- 🚀 **效率提升**：标准化的开发流程，提高团队协作效率
-
-**使用效果**：
-当你在 **Cursor** 或 **Windsurf** 编辑器中编写代码时，AI 助手会：
-- 自动建议符合规范的代码写法
-- 提醒潜在的代码质量问题
-- 推荐 Vue 3 组合式 API 的最佳实践
-- 按照项目结构自动组织文件
-
-**示例场景**：
-```vue
-<!-- AI 会建议使用组合式 API 而非选项式 API -->
-<script setup>
-// ✅ 推荐：使用 setup 语法糖
-import { ref, computed } from 'vue'
-
-const count = ref(0)
-const doubleCount = computed(() => count.value * 2)
-</script>
-
-<!-- ❌ 不推荐：选项式 API -->
-<script>
-export default {
-  data() {
-    return { count: 0 }
-  }
-}
-</script>
-```
-
 ---
 
 ### 📦 3. 工具库增强
@@ -567,8 +500,6 @@ VITE_LOGOUT_LIMIT=1800000
 - ✅ 响应式布局
 - ✅ 流畅的动画效果
 
-#### 🖼️ 新增登录背景图
-添加 `login-background2.jpg` 作为登录页面备选背景。
 
 ---
 
@@ -600,7 +531,7 @@ VITE_LOGOUT_LIMIT=1800000
 
 ### 环境要求
 
-- Node.js >= 16
+- Node.js >= 20
 - npm 或 yarn 或 pnpm
 
 ### 安装依赖
@@ -815,58 +746,10 @@ VITE_LOGOUT_LIMIT=0
 
 ---
 
-## 🎯 使用建议
-
-### 适用场景
-
-1. ✅ **企业级后台管理系统**：完整的权限管理和系统监控
-2. ✅ **需要省市区选择的项目**：内置高性能省市区级联选择器
-3. ✅ **涉及金额计算的项目**：千分位输入框方便展示和输入
-4. ✅ **需要富文本编辑的项目**：提供两种富文本编辑器选择
-5. ✅ **需要图片/视频上传的项目**：增强版上传组件，支持拖拽、视频、大文件
-6. ✅ **需要移动端适配的项目**：集成 Vant 移动端组件库
-7. ✅ **追求开发效率的团队**：代码检查器、格式化、自动部署等工具齐全
-8. ✅ **需要安全合规的项目**：内置三级等保安全特性，满足政府、金融等行业要求
-
-### 与原项目的兼容性
-
-- ✅ **100% 向下兼容**：保留了 RuoYi-Vue3 的所有功能
-- ✅ **无缝迁移**：可以直接从 RuoYi-Vue3 迁移过来
-- ✅ **增量更新**：新增功能都是可选的，不影响原有代码
-
----
 
 ## 🤝 贡献指南
 
 欢迎提交 Issue 和 Pull Request！
-
-### 提交规范
-
-```bash
-# 新功能
-feat: 添加 xxx 功能
-
-# 修复 Bug
-fix: 修复 xxx 问题
-
-# 文档更新
-docs: 更新 xxx 文档
-
-# 样式调整
-style: 调整 xxx 样式
-
-# 代码重构
-refactor: 重构 xxx 模块
-
-# 性能优化
-perf: 优化 xxx 性能
-
-# 测试相关
-test: 添加 xxx 测试
-
-# 构建相关
-build: 更新 xxx 构建配置
-```
 
 ---
 
@@ -885,47 +768,13 @@ build: 更新 xxx 构建配置
 
 ## 📞 联系方式
 
-- 作者: jiangyanxi
-- 网站: [https://www.undsky.com](https://www.undsky.com)
+- 网站：[https://www.undsky.com](https://www.undsky.com)
+- GitHub：[https://github.com/undsky/RuoYi-SpringBoot3-ElementPlus](https://github.com/undsky/RuoYi-SpringBoot3-ElementPlus)
+- Issues：[https://github.com/undsky/RuoYi-SpringBoot3-ElementPlus/issues](https://github.com/undsky/RuoYi-SpringBoot3-ElementPlus/issues)
 
 ---
 
-## ⭐ Star History
+
 
 如果这个项目对你有帮助，请给个 Star ⭐ 支持一下！
-
----
-
-## 📝 更新日志
-
-### v3.9.0 (2024)
-
-#### 🎉 新增功能
-- ✨ 新增省市区三级级联选择器组件 (RegionCascader)
-- ✨ 新增千分位数字输入框组件 (InputNumberQianfen)
-- ✨ 新增 UEditor 富文本编辑器组件 (UEditorPlus)
-- ✨ ImageUpload 图片上传组件全面增强（拖拽上传、视频支持、懒加载、高级预览）
-- ✨ 新增第二种登录页面样式 (login2.vue)
-- ✨ 集成 dayjs 日期处理库
-- ✨ 集成 mitt 事件总线
-- ✨ 集成 pdf-vue3 PDF 预览功能
-- ✨ 集成 sortablejs 拖拽排序功能
-- ✨ 集成 Vant 移动端 UI 组件库
-- ✨ 集成 xe-utils 工具函数库
-- ✨ 新增代码检查器 (code-inspector-plugin)
-- ✨ 新增 Cursor/Windsurf AI 编程规范（7 个规范文件，支持双 IDE）
-- ✨ 新增 FTP/SFTP 自动部署功能
-- ✨ 新增三级等保安全特性：用户无操作自动登出
-
-#### 🔧 优化改进
-- 🎨 新增 Prettier 代码格式化配置
-- 🎨 优化 Vite 构建配置
-- 📝 完善组件文档
-
-#### 🐛 Bug 修复
-- 🐛 修复已知问题
-
----
-
-<p align="center">Made with ❤️ by jiangyanxi</p>
 
