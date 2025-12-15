@@ -10,6 +10,10 @@
 本项目是在 [RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3) 基础上进行的深度优化和功能扩展版本，保留了原有的所有功能，并新增了大量实用的组件和工具，致力于提供更好的开发体验和更强大的功能支持。
 
 
+![公众号](https://cdn.undsky.com/img/ghss.png)
+ > 关注公众号，聚焦 AI 应用落地与开发经验分享
+
+
 ## 📑 目录
 
 - [项目简介](#项目简介)
