@@ -9,6 +9,7 @@
   </div>
 </template>
 <script setup>
+window.UEDITOR_HOME_URL = "/admin/UEditorPlus/";
 import { VueUeditorWrap } from "vue-ueditor-wrap";
 import { getToken } from "../../utils/auth";
 
