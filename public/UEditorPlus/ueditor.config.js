@@ -630,7 +630,7 @@
         // AI智能相关配置
         , ai: {
             // 大模型驱动 OpenAi ModStart
-            driver: 'OpenAi',
+            driver: 'DeepSeek',
             // 大模型对接配置
             driverConfig: {
                 // 模型API地址，留空使用默认
@@ -638,25 +638,26 @@
                 // 大模型平台Key
                 key: '',
                 // 大模型平台模型
-                model: '',
+                model: 'deepseek-chat',
             },
             // 自定义接入
             // driverRequest: function (option) {
-            //     var texts = []
-            //     var mock = function () {
-            //         var text = '测试' + (i++)
-            //         texts.push(text)
-            //         if (texts.length >= 10) {
-            //             // 调用 onFinish 方法表示结束
-            //             option.onFinish({code: 0, msg: 'ok', data: {text: texts.join("")}})
-            //             return
-            //         }
-            //         // 调用 onStream 方法模拟流式返回
-            //         option.onStream({code: 0, msg: 'ok', data: {text: text}})
-            //         setTimeout(mock, 50);
-            //     };
-            //     mock();
-            // },
+            //         var texts = []
+            //         var i = 0;
+            //         var mock = function () {
+            //             var text = '测试' + (i++)
+            //             texts.push(text)
+            //             if (texts.length >= 10) {
+            //                 // 调用 onFinish 方法表示结束
+            //                 option.onFinish({code: 0, msg: 'ok', data: {text: texts.join("")}})
+            //                 return
+            //             }
+            //             // 调用 onStream 方法模拟流式返回
+            //             option.onStream({code: 0, msg: 'ok', data: {text: text}})
+            //             setTimeout(mock, 50);
+            //         };
+            //         mock();
+            //     },
         }
         , aiFunctions:[
             {
