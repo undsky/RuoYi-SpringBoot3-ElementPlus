@@ -14,7 +14,7 @@
       :show-file-list="false"
       :headers="headers"
       class="upload-file-uploader"
-      ref="fileUpload"
+      ref="uploadFileList"
     >
       <!-- 上传按钮 -->
       <el-button :link="props.isLink" type="primary">{{ uploadBtnText }}</el-button>
@@ -44,13 +44,13 @@
       >
         <el-link
           :href="`${baseUrl}${file.url}`"
-          :underline="false"
+          underline="never"
           target="_blank"
         >
           <span class="el-icon-document"> {{ getFileName(file.name) }} </span>
         </el-link>
         <div class="ele-upload-list__item-content-action">
-          <el-link :underline="false" @click="handleDelete(index)" type="danger" v-if="!disabled"
+          <el-link underline="never" @click="handleDelete(index)" type="danger" v-if="!disabled"
             >删除</el-link
           >
         </div>
@@ -251,7 +251,7 @@ function handleUploadSuccess(res, file) {
         dangerouslyUseHTMLString: true,
         message: res.msg,
       });
-      proxy.$refs.fileUpload.handleRemove(file);
+      proxy.$refs.uploadFileList.handleRemove(file);
       uploadedSuccessfully();
     }
   }
