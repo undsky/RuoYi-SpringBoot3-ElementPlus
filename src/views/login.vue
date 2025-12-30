@@ -57,6 +57,32 @@
         </div>
       </el-form-item>
     </el-form>
+    <el-dialog
+      v-model="smsDialogVisible"
+      title="请输入手机验证码"
+      width="350px"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      center
+    >
+      <el-form
+        :model="loginForm"
+        :rules="smsRules"
+        ref="loginFormRef"
+        label-width="80px"
+      >
+        <el-form-item label="验证码" prop="smsCode">
+          <el-input
+            v-model="loginForm.smsCode"
+            placeholder="请输入收到的验证码"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="cancelSms">取消</el-button>
+        <el-button type="primary" @click="handleLoginBySms">确定</el-button>
+      </template>
+    </el-dialog>
     <!--  底部  -->
     <div class="el-login-footer">
       <span>Copyright © 2023-2025 <a target="_blank" href="https://www.undsky.com">undsky.com</a> All Rights Reserved.</span>
@@ -76,12 +102,17 @@ const router = useRouter();
 const { proxy } = getCurrentInstance();
 
 const loginForm = ref({
-  username: "",
-  password: "",
+  username: "admin",
+  password: "jyx_692483",
   rememberMe: false,
   code: "",
-  uuid: ""
+  uuid: "",
+  smsCode: ""
 });
+
+const smsRules = {
+  smsCode: [{ required: true, trigger: "blur", message: "请输入验证码" }]
+};
 
 const loginRules = {
   username: [{ required: true, trigger: "blur", message: "请输入您的账号" }],
@@ -96,10 +127,34 @@ const captchaEnabled = ref(true);
 // 注册开关
 const register = ref(false);
 const redirect = ref(undefined);
+const smsDialogVisible = ref(false);
+const secondaryVerificationEnabled = import.meta.env.VITE_APP_SECONDARY_VERIFICATION_ENABLED === 'true';
 
 watch(route, (newRoute) => {
     redirect.value = newRoute.query && newRoute.query.redirect;
 }, { immediate: true });
+
+function cancelSms() {
+  smsDialogVisible.value = false;
+  loginForm.value.smsCode = "";
+}
+
+function handleLoginBySms() {
+  // 判断 loginForm.smsCode 是否为6位数字
+  const smsCode = loginForm.value.smsCode;
+  if (!/^\d{6}$/.test(smsCode)) {
+    // 尝试使用 proxy.$modal，如果不存在则 fallback
+    if (proxy.$modal) {
+       proxy.$modal.msgError("请输入6位数字的短信验证码");
+    } else {
+       // Simple fallback or assume Element Plus auto-import
+       console.error("请输入6位数字的短信验证码");
+       // Consider importing ElMessage if needed, but for now relying on existing setup
+    }
+    return;
+  }
+  handleLogin();
+}
 
 function handleLogin() {
   proxy.$refs.loginRef.validate(valid => {
@@ -126,11 +181,15 @@ function handleLogin() {
           return acc;
         }, {});
         router.push({ path: redirect.value || "/", query: otherQueryParams });
-      }).catch(() => {
+      }).catch((e) => {
         loading.value = false;
-        // 重新获取验证码
-        if (captchaEnabled.value) {
-          getCode();
+        if (e === "sms" && secondaryVerificationEnabled) {
+          smsDialogVisible.value = true;
+        } else {
+          // 重新获取验证码
+          if (captchaEnabled.value) {
+            getCode();
+          }
         }
       });
     }
