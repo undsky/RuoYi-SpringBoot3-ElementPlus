@@ -1,6 +1,6 @@
 {
   "name": "undsky",
-  "version": "3.9.0",
+  "version": "3.9.1",
   "description": "若依管理系统",
   "author": "jiangyanxi <https://www.undsky.com>",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "clipboard": "2.0.11",
     "dayjs": "^1.11.13",
     "echarts": "5.6.0",
-    "element-plus": "2.9.11",
+    "element-plus": "2.10.7",
     "file-saver": "2.0.5",
     "fuse.js": "6.6.2",
     "js-beautify": "1.14.11",

@@ -40,22 +40,22 @@
 
           <el-table-column label="插入" min-width="5%">
             <template #default="scope">
-              <el-checkbox true-label="1" false-label="0" v-model="scope.row.isInsert"></el-checkbox>
+              <el-checkbox true-value="1" false-value="0" v-model="scope.row.isInsert"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="编辑" min-width="5%">
             <template #default="scope">
-              <el-checkbox true-label="1" false-label="0" v-model="scope.row.isEdit"></el-checkbox>
+              <el-checkbox true-value="1" false-value="0" v-model="scope.row.isEdit"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="列表" min-width="5%">
             <template #default="scope">
-              <el-checkbox true-label="1" false-label="0" v-model="scope.row.isList"></el-checkbox>
+              <el-checkbox true-value="1" false-value="0" v-model="scope.row.isList"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="查询" min-width="5%">
             <template #default="scope">
-              <el-checkbox true-label="1" false-label="0" v-model="scope.row.isQuery"></el-checkbox>
+              <el-checkbox true-value="1" false-value="0" v-model="scope.row.isQuery"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="查询方式" min-width="10%">
@@ -74,7 +74,7 @@
           </el-table-column>
           <el-table-column label="必填" min-width="5%">
             <template #default="scope">
-              <el-checkbox true-label="1" false-label="0" v-model="scope.row.isRequired"></el-checkbox>
+              <el-checkbox true-value="1" false-value="0" v-model="scope.row.isRequired"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="显示类型" min-width="12%">
@@ -122,21 +122,77 @@
 </template>
 
 <script setup name="GenEdit">
-import { getGenTable, updateGenTable } from "@/api/tool/gen";
-import { optionselect as getDictOptionselect } from "@/api/system/dict/type";
-import basicInfoForm from "./basicInfoForm";
-import genInfoForm from "./genInfoForm";
+import { getGenTable, updateGenTable } from "@/api/tool/gen"
+import { optionselect as getDictOptionselect } from "@/api/system/dict/type"
+import basicInfoForm from "./basicInfoForm"
+import genInfoForm from "./genInfoForm"
 import Sortable from 'sortablejs'
 
-const route = useRoute();
-const { proxy } = getCurrentInstance();
+const route = useRoute()
+const { proxy } = getCurrentInstance()
 
-const activeName = ref("columnInfo");
-const tableHeight = ref(document.documentElement.scrollHeight - 245 + "px");
-const tables = ref([]);
-const columns = ref([]);
-const dictOptions = ref([]);
-const info = ref({});
+const activeName = ref("columnInfo")
+const tableHeight = ref(document.documentElement.scrollHeight - 245 + "px")
+const tables = ref([])
+const columns = ref([])
+const dictOptions = ref([])
+const info = ref({})
+
+/** 提交按钮 */
+function submitForm() {
+  const basicForm = proxy.$refs.basicInfo.$refs.basicInfoForm
+  const genForm = proxy.$refs.genInfo.$refs.genInfoForm
+  Promise.all([basicForm, genForm].map(getFormPromise)).then(res => {
+    const validateResult = res.every(item => !!item)
+    if (validateResult) {
+      const genTable = Object.assign({}, info.value)
+      genTable.columns = columns.value
+      genTable.params = {
+        treeCode: info.value.treeCode,
+        treeName: info.value.treeName,
+        treeParentCode: info.value.treeParentCode,
+        parentMenuId: info.value.parentMenuId
+      }
+      updateGenTable(genTable).then(res => {
+        proxy.$modal.msgSuccess(res.msg)
+        if (res.code === 200) {
+          close()
+        }
+      })
+    } else {
+      proxy.$modal.msgError("表单校验未通过，请重新检查提交内容")
+    }
+  })
+}
+
+function getFormPromise(form) {
+  return new Promise(resolve => {
+    form.validate(res => {
+      resolve(res)
+    })
+  })
+}
+
+function close() {
+  const obj = { path: "/tool/gen", query: { t: Date.now(), pageNum: route.query.pageNum } }
+  proxy.$tab.closeOpenPage(obj)
+}
+
+(() => {
+  const tableId = route.params && route.params.tableId
+  if (tableId) {
+    // 获取表详细信息
+    getGenTable(tableId).then(res => {
+      columns.value = res.data.rows
+      info.value = res.data.info
+      tables.value = res.data.tables
+    })
+    /** 查询字典下拉列表 */
+    getDictOptionselect().then(response => {
+      dictOptions.value = response.data
+    })
+  }
+})()
 
 // 拖动排序
 onMounted(() => {
@@ -152,60 +208,4 @@ onMounted(() => {
     }
   })
 })
-
-/** 提交按钮 */
-function submitForm() {
-  const basicForm = proxy.$refs.basicInfo.$refs.basicInfoForm;
-  const genForm = proxy.$refs.genInfo.$refs.genInfoForm;
-  Promise.all([basicForm, genForm].map(getFormPromise)).then(res => {
-    const validateResult = res.every(item => !!item);
-    if (validateResult) {
-      const genTable = Object.assign({}, info.value);
-      genTable.columns = columns.value;
-      genTable.params = {
-        treeCode: info.value.treeCode,
-        treeName: info.value.treeName,
-        treeParentCode: info.value.treeParentCode,
-        parentMenuId: info.value.parentMenuId
-      };
-      updateGenTable(genTable).then(res => {
-        proxy.$modal.msgSuccess(res.msg);
-        if (res.code === 200) {
-          close();
-        }
-      });
-    } else {
-      proxy.$modal.msgError("表单校验未通过，请重新检查提交内容");
-    }
-  });
-}
-
-function getFormPromise(form) {
-  return new Promise(resolve => {
-    form.validate(res => {
-      resolve(res);
-    });
-  });
-}
-
-function close() {
-  const obj = { path: "/tool/gen", query: { t: Date.now(), pageNum: route.query.pageNum } };
-  proxy.$tab.closeOpenPage(obj);
-}
-
-(() => {
-  const tableId = route.params && route.params.tableId;
-  if (tableId) {
-    // 获取表详细信息
-    getGenTable(tableId).then(res => {
-      columns.value = res.data.rows;
-      info.value = res.data.info;
-      tables.value = res.data.tables;
-    });
-    /** 查询字典下拉列表 */
-    getDictOptionselect().then(response => {
-      dictOptions.value = response.data;
-    });
-  }
-})();
 </script>

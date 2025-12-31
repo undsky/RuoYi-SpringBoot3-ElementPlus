@@ -58,28 +58,22 @@
 
             <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
               <el-table-column type="selection" width="50" align="center" />
-              <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
-              <el-table-column label="用户名称" align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
-              <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-              <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
-              <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible" width="120" />
-              <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
+              <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns.userId.visible" />
+              <el-table-column label="用户名称" align="center" key="userName" prop="userName" v-if="columns.userName.visible" :show-overflow-tooltip="true" />
+              <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns.nickName.visible" :show-overflow-tooltip="true" />
+              <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns.deptName.visible" :show-overflow-tooltip="true" />
+              <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" v-if="columns.phonenumber.visible" width="120" />
+              <el-table-column label="状态" align="center" key="status" v-if="columns.status.visible">
                 <template #default="scope">
                   <el-switch
-                    v-if="hasPermiEidt"
                     v-model="scope.row.status"
                     active-value="0"
                     inactive-value="1"
                     @change="handleStatusChange(scope.row)"
                   ></el-switch>
-                <dict-tag
-                    v-else
-                    :options="sys_normal_disable"
-                    :value="scope.row.status"
-                  />
                 </template>
               </el-table-column>
-              <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible" width="160">
+              <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns.createTime.visible" width="160">
                 <template #default="scope">
                   <span>{{ parseTime(scope.row.createTime) }}</span>
                 </template>
@@ -118,7 +112,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="归属部门" prop="deptId">
-              <el-tree-select v-model="form.deptId" :data="enabledDeptOptions" :props="{ value: 'id', label: 'label', children: 'children' }" value-key="id" placeholder="请选择归属部门" check-strictly />
+              <el-tree-select v-model="form.deptId" :data="enabledDeptOptions" :props="{ value: 'id', label: 'label', children: 'children' }" value-key="id" placeholder="请选择归属部门" clearable check-strictly />
             </el-form-item>
           </el-col>
         </el-row>
@@ -196,7 +190,7 @@
 
     <!-- 用户导入对话框 -->
     <el-dialog :title="upload.title" v-model="upload.open" width="400px" append-to-body>
-      <el-upload ref="uploadRef" :limit="1" accept=".xlsx, .xls" :headers="upload.headers" :action="upload.url + '?updateSupport=' + upload.updateSupport" :disabled="upload.isUploading" :on-progress="handleFileUploadProgress" :on-success="handleFileSuccess" :auto-upload="false" drag>
+      <el-upload ref="uploadRef" :limit="1" accept=".xlsx, .xls" :headers="upload.headers" :action="upload.url + '?updateSupport=' + upload.updateSupport" :disabled="upload.isUploading" :on-progress="handleFileUploadProgress" :on-success="handleFileSuccess" :on-change="handleFileChange" :on-remove="handleFileRemove" :auto-upload="false" drag>
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <template #tip>
@@ -220,35 +214,33 @@
 </template>
 
 <script setup name="User">
-import { getToken } from "@/utils/auth";
+import { getToken } from "@/utils/auth"
 import useAppStore from '@/store/modules/app'
-import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "@/api/system/user";
+import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "@/api/system/user"
 import { Splitpanes, Pane } from "splitpanes"
 import "splitpanes/dist/splitpanes.css"
-import auth from "@/plugins/auth";
-const hasPermiEidt = ref(auth.hasPermi("system:role:edit"));
 
-const router = useRouter();
+const router = useRouter()
 const appStore = useAppStore()
-const { proxy } = getCurrentInstance();
-const { sys_normal_disable, sys_user_sex } = proxy.useDict("sys_normal_disable", "sys_user_sex");
+const { proxy } = getCurrentInstance()
+const { sys_normal_disable, sys_user_sex } = proxy.useDict("sys_normal_disable", "sys_user_sex")
 
-const userList = ref([]);
-const open = ref(false);
-const loading = ref(true);
-const showSearch = ref(true);
-const ids = ref([]);
-const single = ref(true);
-const multiple = ref(true);
-const total = ref(0);
-const title = ref("");
-const dateRange = ref([]);
-const deptName = ref("");
-const deptOptions = ref(undefined);
-const enabledDeptOptions = ref(undefined);
-const initPassword = ref("Abc_12389");
-const postOptions = ref([]);
-const roleOptions = ref([]);
+const userList = ref([])
+const open = ref(false)
+const loading = ref(true)
+const showSearch = ref(true)
+const ids = ref([])
+const single = ref(true)
+const multiple = ref(true)
+const total = ref(0)
+const title = ref("")
+const dateRange = ref([])
+const deptName = ref("")
+const deptOptions = ref(undefined)
+const enabledDeptOptions = ref(undefined)
+const initPassword = ref(undefined)
+const postOptions = ref([])
+const roleOptions = ref([])
 /*** 用户导入参数 */
 const upload = reactive({
   // 是否显示弹出层（用户导入）
@@ -263,17 +255,17 @@ const upload = reactive({
   headers: { Authorization: "Bearer " + getToken() },
   // 上传的地址
   url: import.meta.env.VITE_APP_BASE_API + "/system/user/importData"
-});
+})
 // 列显隐信息
-const columns = ref([
-  { key: 0, label: `用户编号`, visible: true },
-  { key: 1, label: `用户名称`, visible: true },
-  { key: 2, label: `用户昵称`, visible: true },
-  { key: 3, label: `部门`, visible: true },
-  { key: 4, label: `手机号码`, visible: true },
-  { key: 5, label: `状态`, visible: true },
-  { key: 6, label: `创建时间`, visible: true }
-]);
+const columns = ref({
+  userId: { label: '用户编号', visible: true },
+  userName: { label: '用户名称', visible: true },
+  nickName: { label: '用户昵称', visible: true },
+  deptName: { label: '部门', visible: true },
+  phonenumber: { label: '手机号码', visible: true },
+  status: { label: '状态', visible: true },
+  createTime: { label: '创建时间', visible: true }
+})
 
 const data = reactive({
   form: {},
@@ -288,126 +280,126 @@ const data = reactive({
   rules: {
     userName: [{ required: true, message: "用户名称不能为空", trigger: "blur" }, { min: 2, max: 20, message: "用户名称长度必须介于 2 和 20 之间", trigger: "blur" }],
     nickName: [{ required: true, message: "用户昵称不能为空", trigger: "blur" }],
-    password: [{ required: true, message: "用户密码不能为空", trigger: "blur" }, { min: 8, max: 20, message: "用户密码长度必须介于 8 和 20 之间", trigger: "blur" }, { pattern: /^[^<>"'|\\]+$/, message: "不能包含非法字符：< > \" ' \\\ |", trigger: "blur" }],
+    password: [{ required: true, message: "用户密码不能为空", trigger: "blur" }, { min: 5, max: 20, message: "用户密码长度必须介于 5 和 20 之间", trigger: "blur" }, { pattern: /^[^<>"'|\\]+$/, message: "不能包含非法字符：< > \" ' \\\ |", trigger: "blur" }],
     email: [{ type: "email", message: "请输入正确的邮箱地址", trigger: ["blur", "change"] }],
     phonenumber: [{ pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: "请输入正确的手机号码", trigger: "blur" }]
   }
-});
+})
 
-const { queryParams, form, rules } = toRefs(data);
+const { queryParams, form, rules } = toRefs(data)
 
 /** 通过条件过滤节点  */
 const filterNode = (value, data) => {
-  if (!value) return true;
-  return data.label.indexOf(value) !== -1;
-};
+  if (!value) return true
+  return data.label.indexOf(value) !== -1
+}
 
 /** 根据名称筛选部门树 */
 watch(deptName, val => {
-  proxy.$refs["deptTreeRef"].filter(val);
-});
+  proxy.$refs["deptTreeRef"].filter(val)
+})
 
 /** 查询用户列表 */
 function getList() {
-  loading.value = true;
+  loading.value = true
   listUser(proxy.addDateRange(queryParams.value, dateRange.value)).then(res => {
-    loading.value = false;
-    userList.value = res.rows;
-    total.value = res.total;
-  });
-};
+    loading.value = false
+    userList.value = res.rows
+    total.value = res.total
+  })
+}
 
 /** 查询部门下拉树结构 */
 function getDeptTree() {
   deptTreeSelect().then(response => {
-    deptOptions.value = response.data;
-    enabledDeptOptions.value = filterDisabledDept(JSON.parse(JSON.stringify(response.data)));
-  });
-};
+    deptOptions.value = response.data
+    enabledDeptOptions.value = filterDisabledDept(JSON.parse(JSON.stringify(response.data)))
+  })
+}
 
 /** 过滤禁用的部门 */
 function filterDisabledDept(deptList) {
   return deptList.filter(dept => {
     if (dept.disabled) {
-      return false;
+      return false
     }
     if (dept.children && dept.children.length) {
-      dept.children = filterDisabledDept(dept.children);
+      dept.children = filterDisabledDept(dept.children)
     }
-    return true;
-  });
-};
+    return true
+  })
+}
 
 /** 节点单击事件 */
 function handleNodeClick(data) {
-  queryParams.value.deptId = data.id;
-  handleQuery();
-};
+  queryParams.value.deptId = data.id
+  handleQuery()
+}
 
 /** 搜索按钮操作 */
 function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
-};
+  queryParams.value.pageNum = 1
+  getList()
+}
 
 /** 重置按钮操作 */
 function resetQuery() {
-  dateRange.value = [];
-  proxy.resetForm("queryRef");
-  queryParams.value.deptId = undefined;
-  proxy.$refs.deptTreeRef.setCurrentKey(null);
-  handleQuery();
-};
+  dateRange.value = []
+  proxy.resetForm("queryRef")
+  queryParams.value.deptId = undefined
+  proxy.$refs.deptTreeRef.setCurrentKey(null)
+  handleQuery()
+}
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const userIds = row.userId || ids.value;
+  const userIds = row.userId || ids.value
   proxy.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function () {
-    return delUser(userIds);
+    return delUser(userIds)
   }).then(() => {
-    getList();
-    proxy.$modal.msgSuccess("删除成功");
-  }).catch(() => {});
-};
+    getList()
+    proxy.$modal.msgSuccess("删除成功")
+  }).catch(() => {})
+}
 
 /** 导出按钮操作 */
 function handleExport() {
   proxy.download("system/user/export", {
     ...queryParams.value,
-  },`user_${new Date().getTime()}.xlsx`);
-};
+  },`user_${new Date().getTime()}.xlsx`)
+}
 
 /** 用户状态修改  */
 function handleStatusChange(row) {
-  let text = row.status === "0" ? "启用" : "停用";
+  let text = row.status === "0" ? "启用" : "停用"
   proxy.$modal.confirm('确认要"' + text + '""' + row.userName + '"用户吗?').then(function () {
-    return changeUserStatus(row.userId, row.status);
+    return changeUserStatus(row.userId, row.status)
   }).then(() => {
-    proxy.$modal.msgSuccess(text + "成功");
+    proxy.$modal.msgSuccess(text + "成功")
   }).catch(function () {
-    row.status = row.status === "0" ? "1" : "0";
-  });
-};
+    row.status = row.status === "0" ? "1" : "0"
+  })
+}
 
 /** 更多操作 */
 function handleCommand(command, row) {
   switch (command) {
     case "handleResetPwd":
-      handleResetPwd(row);
-      break;
+      handleResetPwd(row)
+      break
     case "handleAuthRole":
-      handleAuthRole(row);
-      break;
+      handleAuthRole(row)
+      break
     default:
-      break;
+      break
   }
-};
+}
 
 /** 跳转角色分配 */
 function handleAuthRole(row) {
-  const userId = row.userId;
-  router.push("/system/user-auth/role/" + userId);
-};
+  const userId = row.userId
+  router.push("/system/user-auth/role/" + userId)
+}
 
 /** 重置密码按钮操作 */
 function handleResetPwd(row) {
@@ -424,48 +416,64 @@ function handleResetPwd(row) {
     },
   }).then(({ value }) => {
     resetUserPwd(row.userId, value).then(response => {
-      proxy.$modal.msgSuccess("修改成功，新密码是：" + value);
-    });
-  }).catch(() => {});
-};
+      proxy.$modal.msgSuccess("修改成功，新密码是：" + value)
+    })
+  }).catch(() => {})
+}
 
 /** 选择条数  */
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.userId);
-  single.value = selection.length != 1;
-  multiple.value = !selection.length;
-};
+  ids.value = selection.map(item => item.userId)
+  single.value = selection.length != 1
+  multiple.value = !selection.length
+}
 
 /** 导入按钮操作 */
 function handleImport() {
-  upload.title = "用户导入";
-  upload.open = true;
-};
+  upload.title = "用户导入"
+  upload.open = true
+  upload.selectedFile = null
+}
 
 /** 下载模板操作 */
 function importTemplate() {
   proxy.download("system/user/importTemplate", {
-  }, `user_template_${new Date().getTime()}.xlsx`);
-};
+  }, `user_template_${new Date().getTime()}.xlsx`)
+}
 
 /**文件上传中处理 */
 const handleFileUploadProgress = (event, file, fileList) => {
-  upload.isUploading = true;
-};
+  upload.isUploading = true
+}
+
+/** 文件选择处理 */
+const handleFileChange = (file, fileList) => {
+  upload.selectedFile = file
+}
+
+/** 文件删除处理 */
+const handleFileRemove = (file, fileList) => {
+  upload.selectedFile = null
+}
 
 /** 文件上传成功处理 */
 const handleFileSuccess = (response, file, fileList) => {
-  upload.open = false;
-  upload.isUploading = false;
-  proxy.$refs["uploadRef"].handleRemove(file);
-  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
-  getList();
-};
+  upload.open = false
+  upload.isUploading = false
+  proxy.$refs["uploadRef"].handleRemove(file)
+  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true })
+  getList()
+}
 
 /** 提交上传文件 */
 function submitFileForm() {
-  proxy.$refs["uploadRef"].submit();
-};
+  const file = upload.selectedFile
+  if (!file || file.length === 0 || !file.name.toLowerCase().endsWith('.xls') && !file.name.toLowerCase().endsWith('.xlsx')) {
+    proxy.$modal.msgError("请选择后缀为 “xls”或“xlsx”的文件。")
+    return
+  }
+  proxy.$refs["uploadRef"].submit()
+}
 
 /** 重置操作表单 */
 function reset() {
@@ -482,43 +490,43 @@ function reset() {
     remark: undefined,
     postIds: [],
     roleIds: []
-  };
-  proxy.resetForm("userRef");
-};
+  }
+  proxy.resetForm("userRef")
+}
 
 /** 取消按钮 */
 function cancel() {
-  open.value = false;
-  reset();
-};
+  open.value = false
+  reset()
+}
 
 /** 新增按钮操作 */
 function handleAdd() {
-  reset();
+  reset()
   getUser().then(response => {
-    postOptions.value = response.posts;
-    roleOptions.value = response.roles;
-    open.value = true;
-    title.value = "添加用户";
-    form.value.password = initPassword.value;
-  });
-};
+    postOptions.value = response.posts
+    roleOptions.value = response.roles
+    open.value = true
+    title.value = "添加用户"
+    form.value.password = initPassword.value
+  })
+}
 
 /** 修改按钮操作 */
 function handleUpdate(row) {
-  reset();
-  const userId = row.userId || ids.value;
+  reset()
+  const userId = row.userId || ids.value
   getUser(userId).then(response => {
-    form.value = response.data;
-    postOptions.value = response.posts;
-    roleOptions.value = response.roles;
-    form.value.postIds = response.postIds;
-    form.value.roleIds = response.roleIds;
-    open.value = true;
-    title.value = "修改用户";
-    form.password = "";
-  });
-};
+    form.value = response.data
+    postOptions.value = response.posts
+    roleOptions.value = response.roles
+    form.value.postIds = response.postIds
+    form.value.roleIds = response.roleIds
+    open.value = true
+    title.value = "修改用户"
+    form.password = ""
+  })
+}
 
 /** 提交按钮 */
 function submitForm() {
@@ -526,20 +534,20 @@ function submitForm() {
     if (valid) {
       if (form.value.userId != undefined) {
         updateUser(form.value).then(response => {
-          proxy.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
+          proxy.$modal.msgSuccess("修改成功")
+          open.value = false
+          getList()
+        })
       } else {
         addUser(form.value).then(response => {
-          proxy.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
+          proxy.$modal.msgSuccess("新增成功")
+          open.value = false
+          getList()
+        })
       }
     }
-  });
-};
+  })
+}
 
 onMounted(() => {
   getDeptTree()
